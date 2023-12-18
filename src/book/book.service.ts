@@ -1,15 +1,14 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Book } from './schemas/book.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Types } from "mongoose";
+import mongoose, { Types } from 'mongoose';
 import { BookDto } from './book.dto';
 
 @Injectable()
 export class BookService {
-
   constructor(
     @InjectModel(Book.name)
-    private bookModel: mongoose.Model<Book>
+    private bookModel: mongoose.Model<Book>,
   ) {}
 
   async findAll(): Promise<Book[]> {
@@ -36,4 +35,20 @@ export class BookService {
 
     return book;
   }
+
+  async updateById(id: string, bookDto: BookDto): Promise<Book> {
+    return this.bookModel.findByIdAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      bookDto,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+  }
+
+  async deleteById(id: string, bookDto: BookDto): Promise<Book> {
+    return this.bookModel.findByIdAndDelete({ _id: new Types.ObjectId(id) }, bookDto);
+  }
+
 }
