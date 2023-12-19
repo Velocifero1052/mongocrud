@@ -1,5 +1,5 @@
 
-import { Category } from './schemas/book.schema';
+import { Category } from '../schemas/book.schema';
 
 export class BookDto {
   readonly title: string;

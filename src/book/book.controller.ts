@@ -1,15 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { BookService } from './book.service';
 import { Book } from './schemas/book.schema';
-import { BookDto } from './book.dto';
+import { BookDto } from './dto/book.dto';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('book')
 export class BookController {
   constructor(readonly bookService: BookService) {}
 
   @Get()
-  getBooks(): Promise<Book[]> {
-    return this.bookService.findAll();
+  getBooks(@Query() query: ExpressQuery): Promise<Book[]> {
+    console.log(query);
+    return this.bookService.findAll(query);
   }
 
   @Get(':id')

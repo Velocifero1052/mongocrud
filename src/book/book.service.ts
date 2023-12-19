@@ -1,19 +1,35 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Book } from './schemas/book.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Types } from "mongoose";
-import { BookDto } from './book.dto';
+import mongoose, { Types } from 'mongoose';
+import { BookDto } from './dto/book.dto';
+
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class BookService {
 
   constructor(
     @InjectModel(Book.name)
-    private bookModel: mongoose.Model<Book>
+    private bookModel: mongoose.Model<Book>,
   ) {}
 
-  async findAll(): Promise<Book[]> {
-    return this.bookModel.find();
+  async findAll(query: Query): Promise<Book[]> {
+
+    const resPerPage: number = 10
+    const currentPage: number = Number(query.page) || 1
+    const skip: number = resPerPage * (currentPage - 1)
+
+    const keyword = query.keyword
+      ? {
+          title: {
+            $regex: query.keyword,
+            $options: 'i',
+          },
+        }
+      : {};
+
+    return this.bookModel.find(keyword).limit(resPerPage).skip(skip);
   }
 
   async create(bookDto: BookDto): Promise<Book> {
@@ -33,7 +49,6 @@ export class BookService {
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-
     return book;
   }
 }
