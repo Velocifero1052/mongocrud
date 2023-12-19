@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Post, Delete, Query } from '@nestjs/common';
 import { BookService } from './book.service';
 import { Book } from './schemas/book.schema';
 import { BookDto } from './dto/book.dto';
@@ -27,7 +27,7 @@ export class BookController {
   @Delete(':id')
   deleteById(@Param()id: string, @Body()bookDto: BookDto) {
     // @ts-ignore
-    return this.bookService.deleteById(id);
+    return this.bookService.deleteById(id, bookDto);
   }
 
   @Post()

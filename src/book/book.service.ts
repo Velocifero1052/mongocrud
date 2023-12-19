@@ -5,8 +5,6 @@ import mongoose, { Types } from 'mongoose';
 import { BookDto } from './dto/book.dto';
 
 import { Query } from 'express-serve-static-core';
-import mongoose, { Types } from 'mongoose';
-import { BookDto } from './book.dto';
 
 @Injectable()
 export class BookService {
@@ -59,13 +57,15 @@ export class BookService {
       bookDto,
       {
         new: true,
-        runValidators: true
-      }
+        runValidators: true,
+      },
     );
   }
 
   async deleteById(id: string, bookDto: BookDto): Promise<Book> {
-    return this.bookModel.findByIdAndDelete({ _id: new Types.ObjectId(id) }, bookDto);
+    return this.bookModel.findByIdAndDelete(
+      { _id: new Types.ObjectId(id) },
+      bookDto,
+    );
   }
-
 }
