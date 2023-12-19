@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Put, Post, Delete, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Post,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { BookService } from './book.service';
 import { Book } from './schemas/book.schema';
 import { BookDto } from './dto/book.dto';
@@ -20,13 +29,12 @@ export class BookController {
   }
 
   @Put(':id')
-  updateById(@Param()id: string, @Body()bookDto: BookDto): Promise<Book> {
+  updateById(@Param() id: string, @Body() bookDto: BookDto): Promise<Book> {
     return this.bookService.updateById(id, bookDto);
   }
 
   @Delete(':id')
-  deleteById(@Param()id: string, @Body()bookDto: BookDto) {
-    // @ts-ignore
+  deleteById(@Param() id: string, @Body() bookDto: BookDto) {
     return this.bookService.deleteById(id, bookDto);
   }
 
