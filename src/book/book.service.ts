@@ -5,10 +5,11 @@ import mongoose, { Types } from 'mongoose';
 import { BookDto } from './dto/book.dto';
 
 import { Query } from 'express-serve-static-core';
+import mongoose, { Types } from 'mongoose';
+import { BookDto } from './book.dto';
 
 @Injectable()
 export class BookService {
-
   constructor(
     @InjectModel(Book.name)
     private bookModel: mongoose.Model<Book>,
@@ -51,4 +52,20 @@ export class BookService {
     }
     return book;
   }
+
+  async updateById(id: string, bookDto: BookDto): Promise<Book> {
+    return this.bookModel.findByIdAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      bookDto,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+  }
+
+  async deleteById(id: string, bookDto: BookDto): Promise<Book> {
+    return this.bookModel.findByIdAndDelete({ _id: new Types.ObjectId(id) }, bookDto);
+  }
+
 }
