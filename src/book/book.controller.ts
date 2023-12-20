@@ -13,6 +13,7 @@ import { Book } from './schemas/book.schema';
 import { BookDto } from './dto/book.dto';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { AuthGuard } from "@nestjs/passport";
+import { ExampleDto } from "./dto/example.dto";
 
 @Controller('book')
 export class BookController {
