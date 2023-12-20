@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { Book } from './schemas/book.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Types } from 'mongoose';
-import { BookDto } from './dto/book.dto';
+import { Book } from "./schemas/book.schema";
+import { InjectModel } from "@nestjs/mongoose";
+import mongoose, { Types } from "mongoose";
+import { BookDto } from "./dto/book.dto";
 
-import { Query } from 'express-serve-static-core';
+import { Query } from "express-serve-static-core";
+import { User } from "../auth/schemas/user.schema";
 
 @Injectable()
 export class BookService {
@@ -34,7 +35,7 @@ export class BookService {
       .skip(skip);
   }
 
-  async create(bookDto: BookDto): Promise<Book> {
+  async create(bookDto: BookDto, user: User): Promise<Book> {
     const book: Book = new Book();
     book.title = bookDto.title;
     book.description = bookDto.description;
@@ -42,8 +43,9 @@ export class BookService {
     book.price = bookDto.price;
     book.category = bookDto.category;
 
-    const res = await this.bookModel.create(book);
-    return res;
+    const data = Object.assign(book, {user: user._id})
+
+    return await this.bookModel.create(data);
   }
 
   async findById(id: string): Promise<Book> {
