@@ -6,6 +6,7 @@ import { UserSchema } from "./schemas/user.schema";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtStrategy } from "./jwt.strategy";
 
 @Module({
 
@@ -16,9 +17,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       imports: [ ConfigModule ],
       useFactory: (config: ConfigService) => {
         return {
-          secret: config.get<string>('JWT_SECRET'),
+          secret: 'myVeryVerySecretKey',
           signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRE')
+            expiresIn: '3d'
           },
         }
       }
@@ -26,6 +27,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     MongooseModule.forFeature([{name: 'User', schema: UserSchema}])
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule]
 })
 export class AuthModule {}
